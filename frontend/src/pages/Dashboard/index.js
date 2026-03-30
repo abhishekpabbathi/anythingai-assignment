@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
 import "./index.css";
@@ -11,17 +11,17 @@ const Dashboard = () => {
   const token = Cookies.get("jwt_token");
   const history = useHistory();
 
-  const getTasks = async () => {
+  const getTasks = useCallback(async () => {
     const response = await fetch("http://localhost:5000/api/v1/tasks", {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
     setTasks(data);
-  };
+  }, [token]);
 
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [getTasks]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
